@@ -1,5 +1,5 @@
 import React from 'react';
-import Menu from '../../Menu';
+
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
@@ -22,8 +22,8 @@ const styles = {
 		marginTop: 50,
 		width: '100%',
 	},
-	sheduleContainer: {
-		marginTop: 200,
+	newsContainer: {
+		marginTop: 100,
 		textAlign: 'center',
 	},
 	timeItem: {
@@ -44,7 +44,7 @@ const styles = {
 		fontWeight: 'bold',
 	},
 	confirmButton: {
-		marginTop: 50,
+		marginTop: 0,
 		marginBottom: '-20px',
 		width: 150,
 		marginLeft: 55,
@@ -58,6 +58,27 @@ const styles = {
 			background: 'white',
 		},
 	},
+	headerTextField: {
+		background: 'white',
+		color: 'white',
+		marginBottom: 30,
+		marginLeft: 55,
+		width: 300,
+	},
+	previewTextField: {
+		background: 'white',
+		color: 'white',
+		marginBottom: 30,
+		marginLeft: 55,
+		width: 300,
+	},
+	mainTextField: {
+		background: 'white',
+		color: 'white',
+		marginBottom: 30,
+		marginLeft: 55,
+		width: 300,
+	},
 };
 
 class Shedule extends React.Component {
@@ -65,8 +86,9 @@ class Shedule extends React.Component {
 		super(props);
 		this.state = {
 			day_id: 1,
-			seatCountValue: '',
-			priceValue: '',
+			headerValue: '',
+			previewTextValue: '',
+			mainTextValue: '',
 			Popup: {
 				open: false,
 				message: 'Успех!',
@@ -81,8 +103,8 @@ class Shedule extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.creatingShedule && !this.props.creatingShedule) {
-			if (this.props.creatingSheduleError) {
+		if (prevProps.creatingNews && !this.props.creatingNews) {
+			if (this.props.creatingNewsError) {
 				this.setState(
 					{
 						Popup: {
@@ -130,84 +152,39 @@ class Shedule extends React.Component {
 		}
 	}
 
-	getDatePartString(datePart) {
-		return datePart.toString().length === 1 ? '0' + datePart : datePart;
-	}
 	handleClose = () => {
 		this.setState({ PopupOpen: false });
 	};
-	onDateChange = (e) => {
-		const day_id = e.target.value;
-		this.setState({ day_id });
-	};
-	onTimeChange = (e) => {
-		const time = e.target.value;
-		this.setState({ timeValue: time });
-	};
-	onSeatCountChange = (e) => {
-		const seatCount = e.target.value;
-		this.setState({ seatCountValue: seatCount });
-	};
-	onPriceChange = (e) => {
-		const price = e.target.value;
-		this.setState({ priceValue: price });
-	};
-	render() {
-		console.log('create props->', this.props);
-		console.log('create state->', this.state);
-		const { classes, shedule } = this.props;
-		const today = new Date();
-		const days = [];
-		let dateStr =
-			this.getDatePartString(today.getDate()) +
-			'.' +
-			this.getDatePartString(today.getMonth()) +
-			'.' +
-			today.getFullYear();
-		days.push(dateStr);
-		today.setDate(today.getDate() + 1);
-		dateStr =
-			this.getDatePartString(today.getDate()) +
-			'.' +
-			this.getDatePartString(today.getMonth()) +
-			'.' +
-			today.getFullYear();
-		days.push(dateStr);
-		today.setDate(today.getDate() + 1);
-		dateStr =
-			this.getDatePartString(today.getDate()) +
-			'.' +
-			this.getDatePartString(today.getMonth()) +
-			'.' +
-			today.getFullYear();
-		days.push(dateStr);
 
+	onHeaderChange = (e) => {
+		const value = e.target.value;
+		this.setState({ headerValue: value });
+	};
+	onPreviewTextChange = (e) => {
+		const value = e.target.value;
+		this.setState({ previewTextValue: value });
+	};
+	onMainTextChange = (e) => {
+		const value = e.target.value;
+		this.setState({ mainTextValue: value });
+	};
+
+	render() {
+		console.log('create news props->', this.props);
+		console.log('create news state->', this.state);
+		const { classes } = this.props;
 		return (
 			<div>
-				<div className={classes.sheduleContainer}>
-					<Select
-						native
-						className={classes.dataSelect}
-						value={this.state.day_id}
-						onChange={(e) => this.onDateChange(e)}
-					>
-						<option value={1}>{days[0]}</option>
-						<option value={2}>{days[1]}</option>
-						<option value={3}>{days[2]}</option>
-					</Select>
-					<br />
+				<div className={classes.newsContainer}>
 					<form className={classes.container} noValidate>
 						<TextField
-							type="time"
 							inputProps={{
 								style: { padding: 10 },
 							}}
-							value={this.state.timeValue}
-							onChange={(e) => this.onTimeChange(e)}
-							className={classes.timeTextField}
-							InputLabelProps={{
-								shrink: true,
-							}}
+							placeholder={'Заголовок'}
+							value={this.state.headerValue}
+							onChange={(e) => this.onHeaderChange(e)}
+							className={classes.headerTextField}
 							inputProps={{
 								step: 300, // 5 min
 							}}
@@ -217,26 +194,30 @@ class Shedule extends React.Component {
 							inputProps={{
 								style: { padding: 10 },
 							}}
-							placeholder={'кол-во мест'}
-							value={this.state.seatCountValue}
-							onChange={(e) => this.onSeatCountChange(e)}
-							className={classes.timeTextField}
+							placeholder={'Обзорный текст'}
+							value={this.state.previewTextValue}
+							onChange={(e) => this.onPreviewTextChange(e)}
+							className={classes.previewTextField}
 							inputProps={{
 								step: 300, // 5 min
 							}}
+							multiline
+							rows={5}
 						/>
 						<br />
 						<TextField
 							inputProps={{
 								style: { padding: 10 },
 							}}
-							placeholder={'цена'}
-							value={this.state.priceValue}
-							onChange={(e) => this.onPriceChange(e)}
-							className={classes.timeTextField}
+							placeholder={'Основной текст'}
+							value={this.state.mainTextValue}
+							onChange={(e) => this.onMainTextChange(e)}
+							className={classes.mainTextField}
 							inputProps={{
 								step: 300, // 5 min
 							}}
+							multiline
+							rows={15}
 						/>
 					</form>
 					<br />
@@ -245,11 +226,10 @@ class Shedule extends React.Component {
 						color="primary"
 						className={classes.confirmButton}
 						onClick={() =>
-							this.props.createShedule(
-								this.state.day_id,
-								this.state.seatCountValue,
-								this.state.priceValue,
-								this.state.timeValue
+							this.props.createNews(
+								this.state.headerValue,
+								this.state.previewTextValue,
+								this.state.mainTextValue
 							)}
 					>
 						Создать

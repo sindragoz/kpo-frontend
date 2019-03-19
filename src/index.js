@@ -1,51 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter as Router, Route, Link ,Switch} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
-import {createStore, applyMiddleware} from 'redux';
-import {Provider} from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import allReducers from './store';
 
-import MainPage from "./components/MainPage";
-import Shedule from "./components/Shedule";
-import Souvenir from "./components/Souvenirs";
-import Cabinet from "./components/Cabinet";
-
+import MainPage from './components/MainPage';
+import Shedule from './components/Shedule';
+import Souvenir from './components/Souvenirs';
+import Cabinet from './components/Cabinet';
+import News from './components/News';
+import NewsItemPage from './components/NewsItemPage';
 
 import './style.css';
 
+const middleware = applyMiddleware(thunk);
+const store = createStore(allReducers, middleware);
 
-const middleware=applyMiddleware(thunk);
-const store=createStore(allReducers,middleware);
-
-const ComponentRouter=()=>(
-<Router>
-<Switch>
-
-  <Route exact path="/" component={MainPage} />
-  <Route exact path="/shedule" component={Shedule} />
-  <Route exact path="/souvenir" component={Souvenir}/>
-  <Route exact path="/cabinet" component={Cabinet}/>
-
-  </Switch>
-</Router>
+const ComponentRouter = () => (
+	<Router>
+		<Switch>
+			<Route exact path="/" component={MainPage} />
+			<Route exact path="/shedule" component={Shedule} />
+			<Route exact path="/souvenir" component={Souvenir} />
+			<Route exact path="/cabinet" component={Cabinet} />
+			<Route exact path="/news" component={News} />
+			<Route exact path="/news/:newsId" component={NewsItemPage} />
+		</Switch>
+	</Router>
 );
 
-const App=()=>(
-
-	<div id='AppContainer'>
-		<ComponentRouter/>
+const App = () => (
+	<div id="AppContainer">
+		<ComponentRouter />
 	</div>
-	);
-
+);
 
 ReactDOM.render(
-<Provider store={store}>
-  <App />
-</Provider>
-,
-  document.getElementById('app')
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById('app')
 );
 module.hot.accept();
